@@ -1,0 +1,18 @@
+### Visibility Gaps & Lessons Learned
+
+During the initial simulation of **T1087.002 - Account Discovery: Domain Account**, I encountered a significant visibility gap that is very common in real-world detection engineering.
+
+#### The Problem
+- When running **CrackMapExec** (`--users` and `--groups`) from Kali Linux (`192.168.10.250`), almost no useful events appeared in Splunk.
+- The base Sysmon query `sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational"` worked, but adding filters such as `EventID=1`, `Image`, or `CommandLine` returned little to no results.
+- This happened because CrackMapExec executes **remotely** from the attacker machine (Kali). It does not create a local process like `crackmapexec.exe` on the target Windows machines. Instead, it generates network connections (SMB port 445 and LDAP port 389) and authentication attempts.
+
+As a result, standard Process Creation logs (Sysmon EventID=1) were insufficient to detect this common enumeration technique.
+
+#### Workaround Used
+To generate detectable telemetry, I switched to **native Windows enumeration commands**:
+```cmd
+net user /domain
+net group "Domain Admins" /domain
+net group "Domain Users" /domain
+
