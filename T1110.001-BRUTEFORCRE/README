@@ -14,7 +14,7 @@ Demonstrate how an attacker can use **Hydra** to perform password guessing again
 - **Hydra** – Brute-force tool
 - **Windows 10 VM** – Target with weak password
 - **Splunk** – For log analysis and detection
-
+- **if kali penetration test fails - invoke atomic red team to simulate the attack**
 ## Attack Execution (Kali Linux)
 
 ### Command used:
