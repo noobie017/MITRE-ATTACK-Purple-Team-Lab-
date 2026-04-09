@@ -1,0 +1,38 @@
+# T1003.001 - OS Credential Dumping: LSASS Memory
+
+**MITRE ATT&CK Technique:** [T1003.001](https://attack.mitre.org/techniques/T1003/001/)
+
+**Tactic:** Credential Access
+
+**Objective:** Dump credentials from LSASS memory to simulate real-world credential theft (e.g. for Pass-the-Hash).
+
+## Attack Attempts Summary
+
+### 1. Attempt from Kali Linux (Remote Dumping)
+**Tools tried:**
+- `lsassy`
+- `netexec smb ... -M lsassy`
+- `netexec smb ... --lsa`
+- `impacket-secretsdump`
+- `impacket-wmiexec`
+
+**Issues Encountered:**
+- `could not connect to the host`
+- `STATUS_NO_LOGON_SERVERS`
+- `STATUS_LOGON_FAILURE`
+- Tool kept treating the account as domain user (`adpro.local\administrator`) instead of local account
+
+**Troubleshooting Done:**
+- Tried username variations: `administrator`, `.\administrator`, `TARGET-PC\administrator`
+- Enabled WMI and File Sharing firewall rules on Windows VM
+- Added registry key `LocalAccountTokenFilterPolicy = 1`
+- Enabled built-in Administrator account
+- Tested basic connectivity with ping, nc, and simple `whoami`
+
+**Result:** Failed after multiple attempts (remote WMI/SMB access restrictions on the lab VM).
+
+### 2. Successful Method: Atomic Red Team (Local Execution)
+
+**Command Used:**
+```powershell
+Invoke-AtomicTest T1003.001
