@@ -1,0 +1,39 @@
+# T1059.001 - Command and Scripting Interpreter: PowerShell
+
+**MITRE ATT&CK Technique:** [T1059.001](https://attack.mitre.org/techniques/T1059/001/)
+
+**Tactic:** Execution
+
+**Objective:** Execute malicious or test PowerShell scripts/commands on Windows 10 to simulate real-world attacker use of PowerShell for payload execution and living-off-the-land.
+
+## Attack Attempts Summary
+
+### 1. Attempt from Kali Linux (Remote Execution)
+**Tools tried:**
+- Impacket (`wmiexec.py`, `psexec.py`, `smbexec.py`)
+- Custom PowerShell payload delivery via Impacket
+- Simple host script for payload staging
+
+**Issues Encountered:**
+- Payload execution failed or returned errors
+- Commands did not run reliably on the target
+- Some attempts were blocked or produced no visible action on Windows 10
+
+**Troubleshooting Done:**
+- Tried different Impacket modules and command formats
+- Used encoded commands and `-ExecutionPolicy Bypass`
+- Created and transferred custom `.ps1` payload (example: open Edge to google.com then close browser)
+- Tested basic remote connectivity
+
+**Result:** Failed after multiple attempts. Impacket-based remote PowerShell execution was unreliable in this lab environment.
+
+### 2. Successful Method: Atomic Red Team (Local Execution)
+
+**Command Used:**
+```powershell
+# Run all tests for T1059.001
+Invoke-AtomicTest T1059.001
+
+# Or run specific tests
+Invoke-AtomicTest T1059.001 -TestNumbers 1   # Classic PowerShell execution examples
+Invoke-AtomicTest T1059.001 -TestNumbers 10  # Fileless / Registry-based execution
