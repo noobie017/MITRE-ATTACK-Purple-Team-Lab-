@@ -1,0 +1,39 @@
+# T1136.001 - Create Account: Local Account
+
+**MITRE ATT&CK Technique:** [T1136.001](https://attack.mitre.org/techniques/T1136/001/)
+
+**Tactic:** Persistence
+
+**Objective:** Create a local user account on Windows 10 to simulate persistence and backdoor access commonly used by adversaries.
+
+## Attack Attempts Summary
+
+### 1. Attempt from Kali Linux (Remote Account Creation)
+**Tools tried:**
+- Impacket (`wmiexec.py`, `psexec.py`)
+- Custom PowerShell / net user commands sent remotely
+- Simple host script for payload delivery
+
+**Issues Encountered:**
+- Commands failed to execute reliably
+- Permission errors or connection issues
+- Account creation did not succeed remotely
+
+**Troubleshooting Done:**
+- Tried different Impacket modules and command encoding
+- Used `-ExecutionPolicy Bypass`
+- Tested basic remote connectivity via SSH and WMI
+- Enabled necessary firewall rules
+
+**Result:** Failed after multiple attempts. Remote account creation via Impacket was unreliable in this lab environment.
+
+### 2. Successful Method: Atomic Red Team (Local Execution)
+
+**Command Used:**
+```powershell
+# Run all tests for T1136.001
+Invoke-AtomicTest T1136.001
+
+# Or run specific tests
+Invoke-AtomicTest T1136.001 -TestNumbers 4   # Create a new user in PowerShell (Windows)
+Invoke-AtomicTest T1136.001 -TestNumbers 5   # Create a new user via net.exe (Windows)
