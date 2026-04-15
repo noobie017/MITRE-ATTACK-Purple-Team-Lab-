@@ -1,0 +1,40 @@
+T1059.003 - Command and Scripting Interpreter: Windows Command Shell
+
+**Folder name:** `T1059.003-CMD-EXECUTION`
+
+```markdown
+# T1059.003 - Command and Scripting Interpreter: Windows Command Shell
+
+**MITRE ATT&CK Technique:** [T1059.003](https://attack.mitre.org/techniques/T1059/003/)
+
+**Tactic:** Execution
+
+**Objective:** Execute commands using cmd.exe to simulate attacker use of the Windows Command Shell for living-off-the-land techniques.
+
+## Attack Attempts Summary
+
+### 1. Attempt from Kali Linux (Remote Execution via SSH)
+**Tools tried:**
+- Custom batch file (`cmd-demo.bat`)
+- Linux launcher script (`run-cmd-execution.sh`) using SCP + SSH
+
+**Issues Encountered:**
+- `Connection reset by peer` on port 22
+- SSH session dropped immediately after handshake
+
+**Troubleshooting Done:**
+- Multiple restarts of sshd/ssh-agent services
+- Re-installed OpenSSH.Server capability
+- Configured DefaultShell registry key
+- Fixed folder permissions
+- Verified port 22 listening status
+- Rebooted Windows 10 multiple times
+
+**Result:** Failed. Remote cmd.exe execution via SSH was unreliable due to persistent OpenSSH connection issues.
+
+### 2. Successful Method: Atomic Red Team (Local Execution)
+
+**Command Used:**
+```powershell
+# Run all tests for T1059.003
+Invoke-AtomicTest T1059.003
