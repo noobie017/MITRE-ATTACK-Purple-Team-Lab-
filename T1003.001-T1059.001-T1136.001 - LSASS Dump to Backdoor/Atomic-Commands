@@ -1,0 +1,5 @@
+Invoke-AtomicTest T1003.001 -TestNumbers 2     # LSASS Dump using comsvcs.dll (LOLBin)
+
+Invoke-AtomicTest T1059.001                     # PowerShell Execution
+
+Invoke-AtomicTest T1136.001 -TestNumbers 6     # Create Local Admin Account
