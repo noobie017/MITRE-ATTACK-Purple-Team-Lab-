@@ -8,7 +8,10 @@ Imapair defenses Evasion detecion
 index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
 | search CommandLine IN ("*Set-MpPreference*", "*DisableRealtimeMonitoring*", "*TamperProtection*", "*WinDefend*", "*DisableAntiSpyware*", "*sc stop*")
 | table _time, host, user, Image, ParentImage, CommandLine
-| sort -_time
+| sort -_time 
+###NOTE - Detection failed upon investigation on the powershell when the ATR was invoked the command ran but it has too many access denied error on the powershell, hence on the 
+shot it shows no results found 
+
 
 Indicator Removal (File deletion) detection 
 index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
