@@ -28,3 +28,5 @@ Invoke-AtomicTest T1059.001
 Invoke-AtomicTest T1562.001 -TestNumbers 17     # Tamper with Windows Defender (Recommended)
 
 Invoke-AtomicTest T1070.004 -TestNumbers 3      # File Deletion
+
+###nNOTE - Detection of Impair ddefenses faild, reason too mant access denied error on the powershell invoke when the ATR was performed  
