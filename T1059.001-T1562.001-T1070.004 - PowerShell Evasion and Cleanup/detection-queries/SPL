@@ -1,0 +1,17 @@
+Powershell detection 
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search Image="*powershell.exe*" OR ParentImage="*powershell.exe*"
+| table _time, host, user, Image, ParentImage, CommandLine, ParentCommandLine
+| sort -_time
+
+Imapair defenses Evasion detecion
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*Set-MpPreference*", "*DisableRealtimeMonitoring*", "*TamperProtection*", "*WinDefend*", "*DisableAntiSpyware*", "*sc stop*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+Indicator Removal (File deletion) detection 
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*Remove-Item*", "*del *", "*erase*", "*rm *", "*Delete*", "*T1070*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
