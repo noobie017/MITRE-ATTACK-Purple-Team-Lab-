@@ -1,0 +1,17 @@
+for Powershell 
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search Image="*powershell.exe*"
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+For windows service creation
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*New-Service*", "*sc create*", "*AtomicTestService*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+For indicator Removal
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*Remove-Item*", "*del *", "*erase*", "*delete*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
