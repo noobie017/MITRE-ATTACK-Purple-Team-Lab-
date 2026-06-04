@@ -1,0 +1,24 @@
+for T1003.002 - SAM Credential Dumping
+
+
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*reg save HKLM\\SAM*", "*reg.exe save*", "*sam.hive*", "*system.hive*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+
+for T1059.001 - PowerShell Execution
+
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search Image="*powershell.exe*" OR ParentImage="*powershell.exe*"
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+
+for T1547.001 - Registry Run Keys Persistence
+
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*CurrentVersion\\Run*", "*reg add*Run*", "*HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
