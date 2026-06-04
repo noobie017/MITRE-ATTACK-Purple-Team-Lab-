@@ -1,0 +1,33 @@
+### for Bruteforce
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*net use*", "*IPC$*", "*brute*", "*password*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+for LSASS dump 
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*comsvcs.dll*", "*MiniDump*", "*lsass*", "*procdump*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+for Remote Services 
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*winrm*", "*Invoke-Command*", "*Enter-PSSession*", "*powershell* -ComputerName*", "*wmic /node*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+
+
+whole detection 
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| eval Technique = case(
+    match(CommandLine, "(?i)hydra|brute|crackmapexec"), "T1110.001",
+    match(CommandLine, "(?i)comsvcs.dll|MiniDump|lsass"), "T1003.001",
+    match(CommandLine, "(?i)winrm|Invoke-Command|Enter-PSSession|wmic /node"), "T1021.002",
+    true(), "Other"
+)
+| where Technique != "Other"
+| stats values(Technique) as Techniques, values(CommandLine) as Commands, values(Image) as Processes 
+    min(_time) as firstSeen by host, user, ParentImage
+| where mvcount(Techniques) >= 2
+| sort -firstSeen
