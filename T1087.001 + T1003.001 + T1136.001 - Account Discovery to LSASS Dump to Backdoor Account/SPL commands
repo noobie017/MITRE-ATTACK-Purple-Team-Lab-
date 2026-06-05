@@ -1,0 +1,17 @@
+for powershell 
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search Image="*powershell.exe*" OR ParentImage="*powershell.exe*"
+| table _time, host, user, Image, ParentImage, CommandLine, ParentCommandLine
+| sort -_time
+
+for imapair defenses
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*Set-MpPreference*", "*DisableRealtimeMonitoring*", "*TamperProtection*", "*WinDefend*", "*sc stop*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
+
+for Registry Run Keys Persistence
+index=* sourcetype=XmlWinEventLog:Microsoft-Windows-Sysmon/Operational EventCode=1
+| search CommandLine IN ("*CurrentVersion\\Run*", "*reg add.*Run*", "*HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run*", "*HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run*")
+| table _time, host, user, Image, ParentImage, CommandLine
+| sort -_time
